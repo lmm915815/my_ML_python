@@ -6,6 +6,15 @@ Created on Wed Dec  5 10:49:00 2018
 """
 
 from sklearn.naive_bayes import GaussianNB , MultinomialNB , BernoulliNB
+'''
+GaussianNB
+     针对连续值
+MultinomialNB
+    离散值     可以多次出现
+BernoulliNB
+    离散值     要么存在要么不存在
+'''
+
 import numpy as np
 
 import beiyesi as bys
