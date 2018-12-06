@@ -6,8 +6,6 @@ Created on Wed Dec  5 11:36:00 2018
 """
 
 import numpy as np
-import sys
-
 
 def createDataSet1(): 
     # 创造示例数据 
@@ -32,14 +30,14 @@ def createDataSet1():
 
 
 
-def calaShannonEnt(dataSet):
+def calaShannonEnt(dataSet , index = -1):
     #m , n = dataSet.shape
     m = len(dataSet)
 
     labelCounts = {}
     # 提取每个分类数量
     for line in dataSet:
-        fea = line[-1]
+        fea = line[index]
         if fea not in labelCounts.keys():
             labelCounts[fea] = 0
         labelCounts[fea] += 1
@@ -68,7 +66,7 @@ def spiltDataSet(dataSet  , axis , value ):
     
     return retData
 
-def chooseBestFeatureToSplit(dataSet):
+def chooseBestFeatureToSplit(dataSet , imp = 0 ):
     '''
     原理：
         外循环每一个特征，内循环每一个特征属性
@@ -85,6 +83,7 @@ def chooseBestFeatureToSplit(dataSet):
     baseEnt = calaShannonEnt(dataSet)
     bestFea = -1
     bestGain = 0
+    bestGainRate = 0
     # 循环所有的特征
     for i in range(n):
         # 所有行，第i列数据
@@ -96,9 +95,20 @@ def chooseBestFeatureToSplit(dataSet):
             prob = len(subData) / float(m)
             newEnt += prob * calaShannonEnt(subData)
         infoGain = baseEnt - newEnt
-        if infoGain > bestGain:
-            bestFea = i
-            bestGain = infoGain
+        if imp == 0:  # 计算信息增益  ID3算法
+            if infoGain > bestGain:
+                bestFea = i
+                bestGain = infoGain
+        else:   # 这里是计算的信息增益比 c4.5算法
+            #这里计算的是某个特征条件下的熵 ， 而不是集合类别的熵
+            
+            iv = calaShannonEnt(dataSet , i)
+            if iv == 0:
+                continue
+            infoGainRate = infoGain / iv
+            if bestGainRate < infoGainRate:
+                bestFea = i
+                bestGainRate = infoGainRate
     return bestFea
 
             
@@ -114,8 +124,11 @@ def majorityCnt(classList):
     sortedClass = sorted(classCount.items() ,reverse = True )
     return sortedClass[0][0]
 
-def createTree(dataSet , labels):
+def createTree(dataSet , labels , imp = 0):
     '''
+    思路： 
+        1. 选择最佳特征创建根节点 
+        2. 遍历该特征所有属性，迭代创建决策树
     
     '''
     # 获取所有的数据类别列表
@@ -128,7 +141,7 @@ def createTree(dataSet , labels):
     if len(dataSet[0]) == 1 :
         return majorityCnt(classList)
 
-    bestFea = chooseBestFeatureToSplit(dataSet)
+    bestFea = chooseBestFeatureToSplit(dataSet , imp)
     print '------' , bestFea
     bestFeaLabel = labels[bestFea]
     myTree = {bestFeaLabel :{}}
@@ -166,7 +179,7 @@ if __name__ == '__main__':
     
     dataSet , labels = createDataSet1()
 
-    myTree = createTree((dataSet) , labels[:])
+    myTree = createTree((dataSet) , labels[:] , 0) 
     print  myTree
     pred = predict(myTree , labels , [1,1 ,0,1])
     print pred
