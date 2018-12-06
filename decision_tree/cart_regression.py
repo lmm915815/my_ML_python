@@ -148,6 +148,7 @@ def prune(tree , testData):
         
         #sumErrMer = calaError(testData)
         #value = meanValue(testData)
+        ## 均值就是叶子节点的值 ， 不需要自己在计算的
         sumErr = calaError(dataLeft , tree['left']) + calaError(dataRight , tree['right'])
         value = tree['left'] + (tree['right'])/float(2)
         sumErrMer = calaError(testData , value)
