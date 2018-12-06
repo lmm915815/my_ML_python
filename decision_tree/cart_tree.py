@@ -35,7 +35,12 @@ def spiltDataSet(dataSet , col ,value):
             retSetRight.append(feaVec)
     return retSetLeft , retSetRight
 
-def chooseBestFeatureToSpilt(dataSet):
+
+
+
+            
+
+def chooseBestFeatureToSpilt(dataSet , imp = 0):
     '''
     '''
     numFeat = len(dataSet[0]) -1
@@ -43,7 +48,7 @@ def chooseBestFeatureToSpilt(dataSet):
     minGini = 100000
     bestValue = 9999
     for col in range(numFeat):
-        colList = dataSet[col]
+        colList = [fea[col] for fea in dataSet ]
         feat = set(colList)  
         gini = 0
         for value in feat:
@@ -65,11 +70,12 @@ class Tree(object):
         self.fea = fea
         self.value = value
     def myPrint(self):
-        print self.fea , self.value
-        if not self.right:
-            self.right.myPrint()
-        if not self.left:
-            self.left.myPrint()
+        
+        
+        if  self.isLeaf:
+            return {(self.fea , self.value):(None,None)}
+    
+        return {(self.fea, self.value):(self.left.myPrint() , self.right.myPrint())}
         
         
 def createTree(dataSet , labels):
@@ -119,6 +125,6 @@ if __name__ == '__main__':
     
     myTree = createTree(dataSet , labels)
     
-    pre = predict(myTree , labels , [1,0,0,1])
+    pre = predict(myTree , labels , [0,1,0,1])
     
         
