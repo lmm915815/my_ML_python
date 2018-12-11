@@ -44,7 +44,7 @@ def getSubDataSet(dataSet ,feaNames , numFeat, ratio = 1.0):
     index.append(-1)
     retMat = dataMat[: , index]
     subData = retMat.tolist()
-    
+    # TODO oob数据
     
     return subData ,subFeaNames[0] 
 
