@@ -13,7 +13,10 @@ class cartReg(object):
         self.depth = depth
         self.leafSize = leafSize
         self.tree = None
-    
+        
+    def setTree(self , tree):
+        self.tree = tree
+        
     def spiltData(self , dataSet , spIndex , spValue):
         retLeft = []
         retRight = []
@@ -63,14 +66,16 @@ class cartReg(object):
         # 出口信息
         if depth == 0:
             return self.majortyValue(dataSet)
-        if len(dataSet) <= 2 * leafSize:
+        if len(dataSet) < 2 * leafSize:
             return self.majortyValue(dataSet)
         myTree = {}
         spIndex , spValue , errMin = self.findBestFeatureToSpilt(dataSet)
+        subLeft , subRight = self.spiltData(dataSet ,spIndex , spValue)
+        if len(subLeft) < leafSize or len(subRight) < leafSize:
+            return self.majortyValue(dataSet)
+        
         myTree['spIndex'] = spIndex
         myTree['spValue'] = spValue
-        
-        subLeft , subRight = self.spiltData(dataSet ,spIndex , spValue)
         myTree['left'] = self.buildTree(subLeft , depth -1 , leafSize)
         myTree['right'] = self.buildTree(subRight , depth -1 , leafSize)
         
@@ -82,6 +87,9 @@ class cartReg(object):
     
     
     def predict0(self ,preVec , tree):
+        if not isinstance(tree ,dict):
+            return tree
+        
         spIndex = tree['spIndex']
         spValue = tree['spValue']
         value = preVec[spIndex]
@@ -100,10 +108,12 @@ class cartReg(object):
         
     def predict(self , preList):
         retList = []
-        for preVec in preList:
-            value = self.predict0(preVec , self.tree)
-            retList.append(value)
-        
+        if isinstance( preList[0] , list):
+            for preVec in preList:
+                value = self.predict0(preVec , self.tree)
+                retList.append(value)
+        else:
+            return self.predict0(preList , self.tree)
         return retList
 
 def loadData():
@@ -121,7 +131,8 @@ if __name__ == '__main__' :
     
     dataSet = loadData()
     
-    dt = cartReg(None,1)
+    dt = cartReg(5,1)
     dt.fit(dataSet)
+    print dt.predict([0.00632, 18.0, 2.31, 0.0, -7.8799999999999955])
     
         
