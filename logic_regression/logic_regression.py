@@ -41,13 +41,13 @@ def sigmod(x):
 def compute_loss_theta(data , target , theta):
     m,n = data.shape
     h = sigmod(np.dot(data , theta))
-    ## 这里是位置相乘，不是矩阵乘法
-    cost1 = -1 *  np.sum(target * np.log(h) + (1-target) * np.log(1 - h)) / m
-    dW = np.dot(data.T , (h - target) ) / m
+    # 这里是位置相乘，不是矩阵乘法
+    cost1 = -1 * np.sum(target * np.log(h) + (1-target) * np.log(1 - h)) / m
+    dW = np.dot(data.T, (h - target)) / m
     
-    return dW , cost1
+    return dW, cost1
 
-def train(X, y , alpha =0.01 , repeat=5000):
+def train(X,y,alpha =0.01,repeat=5000):
     lost = []
     theta = np.ones(X.shape[1]).reshape((-1, 1))
     for i in range(0 , repeat):
