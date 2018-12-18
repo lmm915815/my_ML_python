@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-# @Time    : 2018/12/15 上午 11:58
+# @Time    : 2018/12/16 下午 3:19
 # @Author  : tanliqing
 # @Email   : tanliqing2010@163.com
-# @File    : gbdt_sklearn.py
+# @File    : __init__.py.py
 # @Software: PyCharm
 # csdn        https://blog.csdn.net/tanliqing2010
 """
-
-
-from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor

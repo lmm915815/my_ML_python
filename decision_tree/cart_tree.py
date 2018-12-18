@@ -36,10 +36,6 @@ def spiltDataSet(dataSet , col ,value):
     return retSetLeft , retSetRight
 
 
-
-
-            
-
 def chooseBestFeatureToSpilt(dataSet , imp = 0):
     '''
     '''
